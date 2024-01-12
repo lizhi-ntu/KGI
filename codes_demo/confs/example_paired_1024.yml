@@ -1,0 +1,48 @@
+attention_resolutions: 32,16,8
+num_classes: 13
+class_cond: true
+diffusion_steps: 1000
+learn_sigma: true
+noise_schedule: linear
+num_channels: 128
+num_head_channels: 32
+num_heads: 4
+num_res_blocks: 2
+resblock_updown: true
+use_fp16: false
+use_scale_shift_norm: true
+classifier_scale: 0.0
+lr_kernel_n_std: 2
+num_samples: 100
+show_progress: true
+timestep_respacing: '50'
+use_kl: false
+predict_xstart: false
+rescale_timesteps: false
+rescale_learned_sigmas: false
+num_heads_upsample: -1
+channel_mult: ''
+dropout: 0.0
+use_checkpoint: true
+use_new_attention_order: false
+no_instance: true
+clip_denoised: true
+use_ddim: false
+latex_name: VTON
+method_name: VTON
+image_size: 1024
+model_path: ./ckpt/outputs/ckpt_1024/ema_0.9999_300000.pt
+name: inference_1024_paired
+inpa_inj_sched_prev: true
+n_jobs: 1
+save_dir: ./example/paired_mix_1024/
+data_list: p44.txt
+data_root: ./data/zalando-hd-resize
+up: false
+print_estimated_vars: true
+inpa_inj_sched_prev_cumnoise: false
+schedule_jump_params:
+  t_T: 50
+  n_sample: 1
+  jump_length: 10
+  jump_n_sample: 10
