@@ -101,7 +101,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='PyTorch training script')
     # Data Arguments
     parser.add_argument('--exp_name', type=str, default='two_graph_cs', help='name of the experiment')
-    parser.add_argument('--dataroot', type=str, default='../data/zalando-hd-resize', help='dataset root')
+    parser.add_argument('--dataroot', type=str, default='../data/zalando-hd-resized', help='dataset root')
     parser.add_argument('--train_list', type=str, default='train_pairs.txt', help='training data list')
     parser.add_argument('--paired_test_list', type=str, default='demo_paired_pairs.txt', help='paired validation data list')
     parser.add_argument('--unpaired_test_list', type=str, default='demo_unpaired_pairs.txt', help='unpaired validation data list')
@@ -118,7 +118,7 @@ def parse_args():
     parser.add_argument('--lr', type=float, default=1.0e-3, metavar='LR', help='initial learning rate')
     parser.add_argument('--load_step', type=int, default=0, help='intial of training steps')
     parser.add_argument('--keep_step', type=int, default=300000, help='maximum of training steps')
-    parser.add_argument('--test_count', type=int, default=100, help='number of steps for testing')
+    parser.add_argument('--test_count', type=int, default=10000, help='number of steps for testing')
     parser.add_argument('--lamda', default=1, type=float, help='weight for the edge loss')
     parser.add_argument('--workers', default=4, type=int, help='num of workers')
     #=======================================================
@@ -201,7 +201,10 @@ def train(args):
     train_dataset = CPDataset(args, datamode='train', data_list=args.train_list)
     paired_test_dataset = CPDataset(args, datamode='test', data_list=args.paired_test_list)
     unpaired_test_dataset = CPDataset(args, datamode='test', data_list=args.unpaired_test_list, up=True)
-   
+    
+    paired_test_lenth = paired_test_dataset.__len__()
+    unpaired_test_lenth = unpaired_test_dataset.__len__()
+
     train_loader = CPDataLoader(args, train_dataset, True)
     paired_test_loader = CPDataLoader(args, paired_test_dataset, False)
     unpaired_test_loader = CPDataLoader(args, unpaired_test_dataset, False)
@@ -250,7 +253,7 @@ def train(args):
             total_loss = 0
             network.eval()
             with torch.no_grad():
-                for cnt in tqdm.tqdm(range(96//args.batch_size)):
+                for cnt in tqdm.tqdm(range(paired_test_lenth//8)):
                     inputs = paired_test_loader.next_batch()
                     im_name = inputs['im_name']
                     s_pos = inputs['s_pos'].cuda().float()
@@ -270,7 +273,7 @@ def train(args):
                         grid_name = os.path.join(args.vis_save_dir, args.exp_name, 'paired', 'step_{}'.format(step), im_name[i])
                         save_image(grid, grid_name)
 
-                for cnt in tqdm.tqdm(range(16//args.batch_size)):
+                for cnt in tqdm.tqdm(range(unpaired_test_lenth//8)):
                     inputs = unpaired_test_loader.next_batch()
                     im_name = inputs['mix_name']
                     s_pos = inputs['s_pos'].cuda().float()
@@ -297,6 +300,5 @@ def main():
     print(args)
     train(args)
     
-
 if __name__ == "__main__":
     main()

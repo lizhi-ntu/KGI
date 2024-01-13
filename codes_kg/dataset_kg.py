@@ -39,9 +39,8 @@ class CPDataset(data.Dataset):
         return "CPDataset"
     
     def __getitem__(self, index):
-        # target image
+        # image, cloth, and mix names
         im_name = self.im_names[index]
-        image = cv2.imread(osp.join(self.data_path, 'image', im_name), cv2.IMREAD_COLOR)
         
         if self.up == False:
             cloth_name = im_name
@@ -50,8 +49,6 @@ class CPDataset(data.Dataset):
         else:
             cloth_name = self.c_names[index]
             mix_name = '{}_{}'.format(im_name.split('.')[0], cloth_name)
-        
-        cloth = cv2.imread(osp.join(self.data_path, 'cloth', cloth_name), cv2.IMREAD_COLOR)
        
         # skeleton pos
         s_pos_name = im_name.replace('.jpg', '_keypoints.json')

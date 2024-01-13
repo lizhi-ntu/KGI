@@ -92,11 +92,12 @@ def parse_args():
     parser = argparse.ArgumentParser(description='PyTorch training script')
     datamode = 'test'
     # Data Arguments
-    parser.add_argument('--dataroot', type=str, default='../data/zalando-hd-resize', help='dataset root')
-    parser.add_argument('--checkpoint_dir', type=str, default='../ckpt/kg/step_299999.pt', help='pretrained keypoints generator checkpoints')  
-    parser.add_argument('--ck_point_dir', type=str, default='../example/generate_kg/{}/demo-ck-point/'.format(datamode), help='save dir of predicted cloth keypoints')
-    parser.add_argument('--ck_vis_dir', type=str, default='../example/generate_kg/{}/demo-ck-vis/'.format(datamode), help='save dir of visualizations of predicted cloth keypoints')
-    parser.add_argument('--sk_vis_dir', type=str, default='../example/generate_kg/{}/demo-sk-vis/'.format(datamode), help='save dir of visualizations of skeleton keypoints')
+    parser.add_argument('--dataroot', type=str, default='../data/zalando-hd-resized', help='dataset root')
+    parser.add_argument('--datamode', type=str, default='test', help='dataset mode')
+    parser.add_argument('--checkpoint_dir', type=str, default='../checkpoints_pretrained/kg/step_299999.pt', help='pretrained keypoints generator checkpoints')  
+    parser.add_argument('--ck_point_dir', type=str, default='../example/generate_kg/{}/demo-unpaired-ck-point/'.format(datamode), help='save dir of predicted cloth keypoints')
+    parser.add_argument('--ck_vis_dir', type=str, default='../example/generate_kg/{}/demo-unpaired-ck-vis/'.format(datamode), help='save dir of visualizations of predicted cloth keypoints')
+    parser.add_argument('--sk_vis_dir', type=str, default='../example/generate_kg/{}/sk-vis/'.format(datamode), help='save dir of visualizations of skeleton keypoints')
     parser.add_argument('--up', type=bool, default=True, help='whether the person and cloth images are unpaired')
     parser.add_argument('--test_list', type=str, default='demo_unpaired_pairs.txt')
     # Model Arguments
@@ -184,7 +185,7 @@ def test(args):
     network.load_state_dict(torch.load(args.checkpoint_dir))
     network.eval()
 
-    val_dataset = CPDataset(args, datamode='test', data_list=args.test_list)
+    val_dataset = CPDataset(args, datamode=args.datamode, data_list=args.test_list, up=args.up)
     val_loader = CPDataLoader(args, val_dataset, False)
     
     if not os.path.exists(args.ck_point_dir):
