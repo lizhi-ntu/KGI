@@ -101,7 +101,7 @@ def create_argparser():
         log_interval=10,
         save_interval=50000,
         resume_checkpoint='',
-        data_root='../data/zalando-hd-resize/',
+        data_root='../data/zalando-hd-resized/',
         data_list='train_pairs.txt',
         save_dir='../checkpoints/sdm/1024/'
     )

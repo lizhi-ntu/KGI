@@ -98,8 +98,8 @@ def parse_args():
     parser.add_argument('--ck_point_dir', type=str, default='../example/generate_kg/{}/demo-unpaired-ck-point/'.format(datamode), help='save dir of predicted cloth keypoints')
     parser.add_argument('--ck_vis_dir', type=str, default='../example/generate_kg/{}/demo-unpaired-ck-vis/'.format(datamode), help='save dir of visualizations of predicted cloth keypoints')
     parser.add_argument('--sk_vis_dir', type=str, default='../example/generate_kg/{}/sk-vis/'.format(datamode), help='save dir of visualizations of skeleton keypoints')
-    parser.add_argument('--up', type=bool, default=True, help='whether the person and cloth images are unpaired')
     parser.add_argument('--test_list', type=str, default='demo_unpaired_pairs.txt')
+    parser.add_argument('--up', action='store_true', help='whether the person and cloth images are unpaired')
     # Model Arguments
     parser.add_argument('-et', '--edge_type', type=str, default='cs', help='edge type')
     parser.add_argument('-z', '--hid_dim', type=int, default=160, help='num of hidden dimensions')
@@ -206,6 +206,7 @@ def test(args):
                 save_name = inputs['mix_name']
             else:
                 save_name = inputs['im_name']
+            sk_vis_name = inputs['im_name']
             p_pos = network(c_pos, s_pos)
             for i in range(args.batch_size):
                 p_pos = p_pos.cpu()
@@ -220,7 +221,7 @@ def test(args):
                 estimated_cloth = draw_cloth(p_pos[i])
                 save_image(estimated_cloth, ck_vis_path)
 
-                sk_vis_path = os.path.join(args.sk_vis_dir, save_name[i])
+                sk_vis_path = os.path.join(args.sk_vis_dir, sk_vis_name[i])
                 skeleton = draw_skeleton(s_pos[i].cpu())
                 save_image(skeleton, sk_vis_path)
 

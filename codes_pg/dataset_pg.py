@@ -132,11 +132,17 @@ class CPDataset(data.Dataset):
         # ck_vis
         if self.up == False:
             ck_name = c_name
-            ck_vis = Image.open(osp.join(self.data_path, 'paired-ck-vis', ck_name))
+            if self.data_list == 'demo_paired_pairs.txt':
+                ck_vis = Image.open(osp.join(self.data_path, 'demo-paired-ck-vis', ck_name))
+            else:
+                ck_vis = Image.open(osp.join(self.data_path, 'paired-ck-vis', ck_name))
         
         else:
             ck_name = mix_name
-            ck_vis = Image.open(osp.join(self.data_path, 'unpaired-ck-vis', ck_name))        
+            if self.data_list == 'demo_unpaired_pairs.txt':
+                ck_vis = Image.open(osp.join(self.data_path, 'demo-unpaired-ck-vis', ck_name))
+            else:
+                ck_vis = Image.open(osp.join(self.data_path, 'unpaired-ck-vis', ck_name))        
 
         ck_vis = transforms.Resize(self.fine_width)(ck_vis)
         ck_vis = self.transform(ck_vis)

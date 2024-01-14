@@ -50,7 +50,20 @@ def visualize_segmap(input, multi_channel=True, tensor_out=True, batch=0) :
 
     return input
 
-def train(opt, network, train_loader, paired_loader, unpaired_loader):
+def train(opt):
+    network = ParseGenerator(input_nc=19, output_nc=opt.output_nc, ngf=64)
+    
+    train_dataset = CPDataset(opt, datamode='train', data_list=opt.train_list, up=False)
+    paired_test_dataset = CPDataset(opt, datamode='test', data_list=opt.paired_test_list, up=False)
+    unpaired_test_dataset = CPDataset(opt, datamode='test', data_list=opt.unpaired_test_list, up=True)
+
+    paired_test_lenth = paired_test_dataset.__len__()
+    unpaired_test_lenth = unpaired_test_dataset.__len__()
+    
+    train_loader = CPDataLoader(opt, train_dataset, True)
+    paired_test_loader = CPDataLoader(opt, paired_test_dataset, False)
+    unpaired_test_loader = CPDataLoader(opt, unpaired_test_dataset, False)
+
     network.train()
     network.cuda()
     
@@ -104,8 +117,8 @@ def train(opt, network, train_loader, paired_loader, unpaired_loader):
 
             network.eval()
             with torch.no_grad():
-                for cnt in tqdm(range(96//opt.batch_size)):
-                    inputs = paired_loader.next_batch()
+                for cnt in tqdm(range(paired_test_lenth//4)):
+                    inputs = paired_test_loader.next_batch()
                     mix_name = inputs['mix_name']
                     sk_vis = inputs['sk_vis'].cuda()
                     ck_vis = inputs['ck_vis'].cuda()
@@ -128,8 +141,8 @@ def train(opt, network, train_loader, paired_loader, unpaired_loader):
                         grid_name = os.path.join(opt.vis_save_dir, opt.exp_name, 'paired', 'step_{}'.format(step), mix_name[i])
                         save_image(grid, grid_name)
                 
-                for cnt in tqdm(range(16//opt.batch_size)):
-                    inputs = unpaired_loader.next_batch()
+                for cnt in tqdm(range(unpaired_test_lenth//4)):
+                    inputs = unpaired_test_loader.next_batch()
                     mix_name = inputs['mix_name']
                     sk_vis = inputs['sk_vis'].cuda()
                     ck_vis = inputs['ck_vis'].cuda()
@@ -159,14 +172,14 @@ def get_opt():
     # Data Arguments
     parser.add_argument('--exp_name', type=str, default='parse_full')
     parser.add_argument('--parse_ag_mode', type=str, default='parse_ag_full')
-    parser.add_argument('--dataroot', default='../data/zalando-hd-resize')
+    parser.add_argument('--dataroot', default='../data/zalando-hd-resized')
     parser.add_argument('--fine_width', type=int, default=192*4)
     parser.add_argument('--fine_height', type=int, default=256*4)
     parser.add_argument('--checkpoint_dir', type=str, default='../checkpoints/')
     parser.add_argument('--vis_save_dir', type=str, default='../visualizations/')
     parser.add_argument('--train_list', default='train_pairs.txt')
     parser.add_argument('--paired_test_list', default='demo_paired_pairs.txt')
-    parser.add_argument('--unpaired_test_list', default='test_unpaired_pairs_short.txt')
+    parser.add_argument('--unpaired_test_list', default='demo_unpaired_pairs.txt')
     parser.add_argument('--load_step', type=int, default=0)
     parser.add_argument('--keep_step', type=int, default=20000)
     # Model Arguments
@@ -177,7 +190,7 @@ def get_opt():
     parser.add_argument('--batch-size', type=int, default=4)
     parser.add_argument('--loss', type=str, default='mix')
     parser.add_argument('--G_lr', type=float, default=0.0002, help='Generator initial learning rate for adam')
-    parser.add_argument('--test_count', type=int, default=100)
+    parser.add_argument('--test_count', type=int, default=5000)
     
     opt = parser.parse_args()
     return opt
@@ -185,14 +198,7 @@ def get_opt():
 def main():
     opt = get_opt()
     print(opt)
-    network = ParseGenerator(input_nc=19, output_nc=opt.output_nc, ngf=64)
-    train_dataset = CPDataset(opt, datamode='train', data_list=opt.train_list, up=False)
-    paired_dataset = CPDataset(opt, datamode='test', data_list=opt.paired_test_list, up=False)
-    unpaired_dataset = CPDataset(opt, datamode='test', data_list=opt.unpaired_test_list, up=True)
-    train_loader = CPDataLoader(opt, train_dataset, True)
-    paired_loader = CPDataLoader(opt, paired_dataset, False)
-    unpaired_loader = CPDataLoader(opt, unpaired_dataset, False)
-    train(opt, network, train_loader, paired_loader, unpaired_loader)
+    train(opt)
 
 if __name__ == "__main__":
     main()
