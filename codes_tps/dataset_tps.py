@@ -71,10 +71,17 @@ class CPDataset(data.Dataset):
         # parse 13
         if self.up == True:
             parse_name = mix_name.replace('.jpg', '.png')
-            im_parse_pil_big = Image.open(osp.join(self.data_path, self.opt.parse_name, parse_name))
+            if self.data_list == 'demo_unpaired_pairs.txt':
+                im_parse_pil_big = Image.open(osp.join(self.data_path, 'demo-unpaired-full-parse', parse_name))
+            else:
+                im_parse_pil_big = Image.open(osp.join(self.data_path, 'unpaired-full-parse', parse_name))
         else:
             parse_name = im_name.replace('.jpg', '.png')
-            im_parse_pil_big = Image.open(osp.join(self.data_path, self.opt.parse_name, parse_name))
+            if self.data_list == 'demo_paired_pairs.txt':
+                im_parse_pil_big = Image.open(osp.join(self.data_path, 'demo-paired-full-parse', parse_name))
+            else:
+                im_parse_pil_big = Image.open(osp.join(self.data_path, 'paired-full-parse', parse_name))
+        
         im_parse_pil = transforms.Resize(self.fine_width)(im_parse_pil_big)
         parse = torch.from_numpy(np.array(im_parse_pil)[None]).long()
         parse_13 = torch.FloatTensor(13, self.fine_height, self.fine_width).zero_()
@@ -100,10 +107,16 @@ class CPDataset(data.Dataset):
         e_pos = 0
         if self.up == True:
             e_pos_name = mix_name.replace('.jpg', '.json')
-            e_pos = json.load(open(osp.join(self.data_path, 'unpaired-ck-point', e_pos_name)))
+            if self.data_list == 'demo_unpaired_pairs.txt':
+                e_pos = json.load(open(osp.join(self.data_path, 'demo-unpaired-ck-point', e_pos_name)))
+            else:
+                e_pos = json.load(open(osp.join(self.data_path, 'unpaired-ck-point', e_pos_name)))
         else:
             e_pos_name = im_name.replace('.jpg', '.json')
-            e_pos = json.load(open(osp.join(self.data_path, 'paired-ck-point', e_pos_name)))
+            if self.data_list == 'demo_paired_pairs.txt':
+                e_pos = json.load(open(osp.join(self.data_path, 'demo-paired-ck-point', e_pos_name)))
+            else:
+                e_pos = json.load(open(osp.join(self.data_path, 'paired-ck-point', e_pos_name)))
         e_pos = np.array(e_pos["keypoints"])
         e_pos = torch.tensor(e_pos)
 

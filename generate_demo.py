@@ -330,14 +330,14 @@ def toU8(sample):
 def parse_args():
     parser = argparse.ArgumentParser(description='PyTorch training script')
     # Data Arguments
-    parser.add_argument("--dataroot", type=str, default="data/zalando-hd-resize")
+    parser.add_argument("--dataroot", type=str, default="data/zalando-hd-resized")
     parser.add_argument("--parse_ag_mode", type=str, default='parse_ag_full')
-    parser.add_argument('--vis_dir', type=str, default='example/demo/vis_fp32_19999/')
-    parser.add_argument('--final_results_dir', type=str, default='example/demo/final_results/')
-    parser.add_argument('--kg_checkpoint_dir', type=str, default='ckpt/kg/step_299999.pt')
-    parser.add_argument('--pg_checkpoint_dir', type=str, default='checkpoints/mix/parse_ag_full/step_9999.pt')
-    parser.add_argument('--up', type=bool, default=True)
+    parser.add_argument('--vis_dir', type=str, default='example/generate_demo/vis/')
+    parser.add_argument('--final_results_dir', type=str, default='example/generate_demo/final_results/')
+    parser.add_argument('--kg_checkpoint_dir', type=str, default='checkpoints_pretrained/kg/step_299999.pt')
+    parser.add_argument('--pg_checkpoint_dir', type=str, default='checkpoints_pretrained/pg/step_9999.pt')
     parser.add_argument('--test_list', type=str, default='demo_unpaired_pairs.txt')
+    parser.add_argument('--up', type=bool, default=True)
     # KG Model Arguments
     parser.add_argument('-et', '--edge_type', type=str, default='cs')
     parser.add_argument('-z', '--hid_dim', type=int, default=160)
@@ -351,7 +351,7 @@ def parse_args():
     # Test Arguments
     parser.add_argument('--batch_size', type=int, default=1)
     parser.add_argument('--workers', type=int, default=2)
-    parser.add_argument('--conf_path', type=str, required=False, default='codes_sci/confs/demo.yml')
+    parser.add_argument('--conf_path', type=str, required=False, default='codes_demo/confs/demo.yml')
     args = parser.parse_args()
     # SCI Arguments    
     args_sci = conf_base.Default_Conf()
@@ -518,6 +518,7 @@ def test(args, args_sci):
                 conf=args_sci
                 )
             final_image = toU8(sci_result['sample'])
+            Image.fromarray(final_image[0]).save(os.path.join(args.final_results_dir, save_name[0].replace('.jpg', '.png')))
 
             cloth_vis = totensor_transform(cv2.cvtColor(cloth[0], cv2.COLOR_BGR2RGB))
             image_vis = totensor_transform(cv2.cvtColor(image[0], cv2.COLOR_BGR2RGB))

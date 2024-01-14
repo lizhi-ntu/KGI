@@ -52,16 +52,26 @@ class CPDataset(Dataset):
         if self.up == True:
             c_name = self.c_names[idx]
             mix_name = '{}_{}'.format(im_name.split('.')[0], c_name)
-            mask_mid_name = 'mask_unpaired_mix_1024'
-            image_mid_name = 'image_unpaired_mix_1024'
-            parse_mid_name = 'unpaired-full-parse-mix'
+            if self.data_list == 'demo_unpaired_pairs.txt':
+                mask_mid_name = 'mask_demo_unpaired_1024'
+                image_mid_name = 'image_demo_unpaired_1024'
+                parse_mid_name = 'demo-unpaired-full-parse'
+            else:
+                mask_mid_name = 'mask_unpaired_1024'
+                image_mid_name = 'image_unpaired_1024'
+                parse_mid_name = 'unpaired-full-parse'
 
         else:
             c_name = im_name
             mix_name = im_name
-            mask_mid_name = 'mask_paired_mix_1024'
-            image_mid_name = 'image_paired_mix_1024'
-            parse_mid_name = 'paired-full-parse-mix'
+            if self.data_list == 'demo_paired_pairs.txt':
+                mask_mid_name = 'mask_demo_paired_1024'
+                image_mid_name = 'image_demo_paired_1024'
+                parse_mid_name = 'demo-paired-full-parse'
+            else:
+                mask_mid_name = 'mask_paired_1024'
+                image_mid_name = 'image_paired_1024'
+                parse_mid_name = 'paired-full-parse'
         
         # incomplete image
         im_path = osp.join(self.data_path, image_mid_name, mix_name).replace('.jpg', '.png')

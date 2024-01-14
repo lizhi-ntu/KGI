@@ -31,14 +31,14 @@ use_ddim: false
 latex_name: VTON
 method_name: VTON
 image_size: 1024
-model_path: ../ckpt/outputs/ckpt_1024/ema_0.9999_300000.pt
-name: inference_1024_unpaired
+model_path: ../checkpoints_pretrained/sci/ckpt_1024/ema_0.9999_300000.pt
+name: demo_paired
 inpa_inj_sched_prev: true
 n_jobs: 1
-save_dir: ../example/unpaired_mix_1024/
-data_list: test_unpaired_pairs.txt
-data_root: ../data/zalando-hd-resize
-up: true
+save_dir: ../example/generate_sci/test/demo_paired/
+data_list: demo_paired_pairs.txt
+data_root: ../data/zalando-hd-resized
+up: false
 print_estimated_vars: true
 inpa_inj_sched_prev_cumnoise: false
 schedule_jump_params:

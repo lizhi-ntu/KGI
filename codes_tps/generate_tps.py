@@ -217,15 +217,14 @@ def parse_args():
     parser = argparse.ArgumentParser(description='PyTorch training script')
     # Data Arguments
     parser.add_argument('--datamode', type=str, default='test')
-    parser.add_argument('--dataroot', type=str, default='../data/zalando-hd-resize')
-    parser.add_argument('--data_list', type=str, default='test_paired_pairs.txt')
-    parser.add_argument('--up', type=bool, default=False)
-    parser.add_argument('--parse_name', type=str, default='paired-full-parse-mix')
+    parser.add_argument('--dataroot', type=str, default='../data/zalando-hd-resized')
+    parser.add_argument('--data_list', type=str, default='test_pairs.txt')
     parser.add_argument('--fine_height', type=int, default=256*4)
     parser.add_argument('--fine_width', type=int, default=192*4)
     parser.add_argument('--margin', type=int, default=-5)
-    parser.add_argument('--save_dir_mask', type=str, default='../example/generate_repaint/test/mask_paired_mix_1024')
-    parser.add_argument('--save_dir_image', type=str, default='../example/generate_repaint/test/image_paired_mix_1024')
+    parser.add_argument('--save_dir_mask', type=str, default='../example/generate_tps/test/mask_paired_1024')
+    parser.add_argument('--save_dir_image', type=str, default='../example/generate_tps/test/image_paired_1024')
+    parser.add_argument('--up', action='store_true')
     args = parser.parse_args()
     
     if args.fine_height == 256:
