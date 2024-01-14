@@ -1,1 +1,1 @@
-launch -- python3 generate_sci.py --conf_path confs/test_paired.yml
+python3 generate_sci.py --conf_path confs/test_paired.yml
