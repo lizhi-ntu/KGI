@@ -67,6 +67,7 @@ The model training of the KGI method consists of three steps: Training of the Ke
    python3 train_kg.py
    ```
   During the training, the visualization of some validation samples will be saved under directory `KGI/visualizations/two_graph_cs/`. Below is an example of visualization results.
+  ![Demo Image 1](https://github.com/lizhi-ntu/KGI/blob/main/imgs/demo_img1.jpg)
   The pretrianed checkpoints of Keypoints Generator could be downloaded from [Google Drive](https://drive.google.com/file/d/1FQbeWkcqgSqycznGW6INWt2kkrk5nG3H/view?usp=drive_link) and put under the directory `KGI/checkpoints_pretrained/kg/`.
 * Since the parse generation is based on the estimated keypoints conditions, please generate the keypoints conditions with the following scripts before the training of Parse Generator:
   ```
@@ -84,6 +85,7 @@ The model training of the KGI method consists of three steps: Training of the Ke
   python3 train_pg.py
   ```
   During the training, the visualization of some validation samples will be saved under directory `KGI/visualizations/parse_full/`. Below is an example of visualization results.
+  ![Demo Image 2](https://github.com/lizhi-ntu/KGI/blob/main/imgs/demo_img2.jpg)
   The pretrianed checkpoints of Parse Generator could be downloaded from [Google Drive](https://drive.google.com/file/d/1_2lTeLdCczBnnaXsMxBtvbLZv2GY3PCp/view?usp=drive_link) and put under the directory `KGI/checkpoints_pretrained/pg/`.
 * After the training of the Parse Generator, the person image parse (estimated segmentation map) could be generated with the following scripts:
   ```
@@ -123,7 +125,7 @@ The model training of the KGI method consists of three steps: Training of the Ke
    python3 generate_demo.py
    ```
    The final try-on results will be saved under `KGI/example/generate_demo/final_results/` and the visualizations of the intermediate results will be saved under `KGI/example/generate_demo/vis/`. Below is an example of demo results.
-
+   ![Demo Image 3](https://github.com/lizhi-ntu/KGI/blob/main/imgs/demo_img3.png)
 ## Acknowledgement and Citations
 * The implementation of Keypoints Generator is based on codes repo [SemGCN](https://github.com/garyzhao/SemGCN).
 * The implementation of Semantic Conditioned Inpainting Model is based on [semantic-diffusion-model](https://github.com/WeilunWang/semantic-diffusion-model) and [RePaint](https://github.com/andreas128/RePaint).
